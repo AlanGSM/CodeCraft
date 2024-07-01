@@ -43,20 +43,22 @@ void loop() {
   // Activa el piezoeléctrico y los LEDs si se detecta gas y la temperatura supera los 40°C
   if (temperatureC > 40 && gasAnalogValue > gasThreshold) {
     digitalWrite(piezoPin, HIGH);  // Enciende el piezoeléctrico
+    myServo.write(90);  // Mueve el servomotor a 90 grados
     for (int i = 0; i < numLEDs; i++) {
-      strip.setPixelColor(i, strip.Color(255, 0, 0));  // Establece el color del LED en rojo
+      strip.setPixelColor(i, strip.Color(255, 0, 0));  // Enciende el LED en rojo
       strip.show();  // Actualiza la tira de LEDs
       delay(250);  // Espera 250 ms antes de encender el siguiente LED
-    }
-    myServo.write(90);  // Mueve el servomotor a 90 grados
-  } else {
-    digitalWrite(piezoPin, LOW);  // Apaga el piezoeléctrico
-    for (int i = 0; i < numLEDs; i++) {
       strip.setPixelColor(i, strip.Color(0, 0, 0));  // Apaga el LED
       strip.show();  // Actualiza la tira de LEDs
-      delay(250);  // Espera 250 ms antes de apagar el siguiente LED
+      delay(250);  // Espera 250 ms antes de pasar al siguiente LED
     }
+  } else {
+    digitalWrite(piezoPin, LOW);  // Apaga el piezoeléctrico
     myServo.write(0);  // Coloca el servomotor en la posición inicial (0 grados)
+    for (int i = 0; i < numLEDs; i++) {
+      strip.setPixelColor(i, strip.Color(0, 0, 0));  // Apaga el LED
+    }
+    strip.show();  // Actualiza la tira de LEDs
   }
 
   delay(1000);  // Espera 1 segundo antes de la siguiente lectura
